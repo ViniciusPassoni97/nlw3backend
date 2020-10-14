@@ -2,8 +2,10 @@ import {Router} from 'express';
 
 const route = Router();
 
-route.get('/',(req,res)=>{
-    return res.json({'message':'Hello Word'});
+route.post('/orphanages',(req,res)=>{
+    const {data} = req.body;
+
+    return res.json(data);
 });
 
 export default route;
