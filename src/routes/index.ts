@@ -1,9 +1,13 @@
 import {Router} from 'express';
 import ControllerOrphanages from '../controllers/ControllerOrphanages';
 
-const route = Router();
+import multer from 'multer';
+import ConfigMulter from '../config/upload';
 
-route.post('/orphanages', ControllerOrphanages.create);
+const route = Router();
+const upload = multer(ConfigMulter);
+
+route.post('/orphanages',upload.array('images') ,ControllerOrphanages.create);
 route.get('/orphanages', ControllerOrphanages.index);
 route.get('/orphanages/:id', ControllerOrphanages.show);
 
