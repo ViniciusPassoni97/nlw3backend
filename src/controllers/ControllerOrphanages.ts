@@ -3,11 +3,18 @@ import {getRepository} from 'typeorm';
 import ModelOrphanage from '../models/Orphanage';
 
 export default {
+    async show(request:Request,response:Response){
+        const {id} = request.params;
+        const orphanagesRepository = getRepository(ModelOrphanage);
+        const findOrphanages = await orphanagesRepository.findOneOrFail(id);
+
+        return response.json(findOrphanages);
+    },
     async index(request:Request,response:Response){
         const orphanagesRepository = getRepository(ModelOrphanage);
-        const list = await orphanagesRepository.find();
+        const listOrphanages = await orphanagesRepository.find();
 
-        return response.json(list);
+        return response.json(listOrphanages);
     },
     async create(request:Request,response:Response){
         try {
