@@ -4,6 +4,12 @@ import ModelOrphanage from '../models/Orphanage';
 
 export default {
     async index(request:Request,response:Response){
+        const orphanagesRepository = getRepository(ModelOrphanage);
+        const list = await orphanagesRepository.find();
+
+        return response.json(list);
+    },
+    async create(request:Request,response:Response){
         try {
             const {
                 name,
