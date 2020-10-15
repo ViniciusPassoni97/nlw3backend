@@ -6,14 +6,15 @@ export default {
     async show(request:Request,response:Response){
         const {id} = request.params;
         const orphanagesRepository = getRepository(ModelOrphanage);
-        const findOrphanages = await orphanagesRepository.findOneOrFail(id);
+        const findOrphanages = await orphanagesRepository.findOneOrFail(id,{relations:['images']});
 
         return response.json(findOrphanages);
     },
     async index(request:Request,response:Response){
         const orphanagesRepository = getRepository(ModelOrphanage);
-        const listOrphanages = await orphanagesRepository.find();
-
+        const listOrphanages = await orphanagesRepository.find({
+            relations:['images']
+        });
         return response.json(listOrphanages);
     },
     async create(request:Request,response:Response){
@@ -28,6 +29,12 @@ export default {
                 open_on_meekends
             } = request.body;
             const orphanagesRepository = getRepository(ModelOrphanage);
+            
+            const orphanagesImages = request.files as Express.Multer.File[];
+            const images = orphanagesImages.map(image=>{
+                return {path:image.filename}
+            })
+            
             const orphanage = orphanagesRepository.create({
                     name,
                     latitude,
@@ -35,7 +42,8 @@ export default {
                     about,
                     instructions,
                     opening_hours,
-                    open_on_meekends
+                    open_on_meekends,
+                    images,
             });  
             await orphanagesRepository.save(orphanage);
             return response.status(201).json(orphanage);          
