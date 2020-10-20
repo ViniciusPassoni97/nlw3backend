@@ -38,7 +38,6 @@ export default {
             const images = orphanagesImages.map(image=>{
                 return {path:image.filename}
             })
-            console.log(name);
             const data = {
                 name,
                 latitude,
@@ -46,10 +45,10 @@ export default {
                 about,
                 instructions,
                 opening_hours,
-                open_on_meekends,
+                open_on_meekends:open_on_meekends===true,
                 images
             };
-            
+            console.log(data);
             const schema = Yup.object().shape({
                 name:Yup.string().required(),
                 latitude:Yup.number().required(),
@@ -69,9 +68,10 @@ export default {
             await schema.validate(data,{
                 abortEarly:false,
             });
-
-            const orphanage = orphanagesRepository.create(data);  
-            await orphanagesRepository.save(orphanage);
+            const orphanage = orphanagesRepository.create(data);
+            console.log(orphanage);  
+            const res = await orphanagesRepository.save(orphanage);
+            console.log(res);
             return response.status(201).json(orphanage);          
         } catch (error) {
             return response.json(error);
